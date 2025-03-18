@@ -1,0 +1,12 @@
+deploy:
+  compose:
+    file: docker-compose.yaml
+    services: 
+    - servicea
+  divert:
+    namespace: staging-chain
+dev:
+  servicea:
+    command: bash
+    sync:
+    - serviceA:/usr/src/app
