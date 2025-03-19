@@ -22,7 +22,7 @@ app.get("/chain", async function (req, res) {
 
   try {
     const url = `https://serviceb-${ns}.${process.env.OKTETO_DOMAIN}/chain`;
-    const data = await got(url, options).text();
+    const data = await got(url).text();
     const message = `Service A says hello from ${process.env.OKTETO_NAMESPACE}! <br />`;
     res.send(message + data);
   } catch (error) {
