@@ -1,12 +1,12 @@
 deploy:
   compose:
     file: docker-compose.yaml
-    services: 
-    - servicea
+    services:
+      - servicea
   divert:
-    namespace: staging-chain
+    namespace: $SHARED_NAMESPACE
 dev:
   servicea:
     command: bash
     sync:
-    - serviceA:/usr/src/app
+      - serviceA:/usr/src/app
