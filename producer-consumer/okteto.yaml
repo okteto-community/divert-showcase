@@ -1,0 +1,11 @@
+deploy:
+  compose: docker-compose.yaml
+dev:
+  producer:
+    command: bash
+    sync:
+      - producer:/usr/src/app
+  consumer:
+    command: bash
+    sync:
+      - consumer:/usr/src/app
