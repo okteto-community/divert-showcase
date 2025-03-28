@@ -4,10 +4,32 @@ import express from "express";
 const app = express();
 const PORT = 8080;
 
-async function callDownstreamService(req) {
-  const url = `https://${req.headers.host}/servicec/chain`;
+function getDivertKey(headers) {
+  if (headers && headers[oktetoDivertHeader]) {
+    return headers[oktetoDivertHeader];
+  }
+
+  return undefined;
+}
+
+function buildHeaders(headers) {
+  // since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
+  // This allows the receiving service to make runtime decisions
+  var options = { headers: {} };
+  const divertKey = getDivertKey(headers);
+  if (divertKey) {
+    options.headers["baggage.okteto-divert"] = divertKey;
+    //add other headers that you might need to propagate
+  }
+
+  return options;
+}
+
+async function callDownstreamService(headers) {
+  const url = `https://${headers.host}/servicec/chain`;
+  const options = buildHeaders(headers);
   console.log(`calling service ${url}`);
-  return await got(url).text();
+  return await got(url, options).text();
 }
 
 app.get("/serviceb", function (req, res) {
@@ -18,7 +40,7 @@ app.get("/serviceb/chain", async function (req, res) {
   console.log("/chain request");
 
   try {
-    const data = await callDownstreamService(req);
+    const data = await callDownstreamService(req.headers);
     const message = `Service B says hello from ${process.env.OKTETO_NAMESPACE}! <br />`;
     res.send(message + data);
   } catch (err) {
