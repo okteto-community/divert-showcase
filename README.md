@@ -1,6 +1,6 @@
 # Okteto Divert Showcase
 
-Divert allows you to create Development Environments that include only the services you are actively working on while leveraging a shared environment for all other microservices. This approach significantly reduces infrastructure costs and complexity, especially in large environments. [You can learn more about divert in our documentation](https://www.okteto.com/docs/tutorials/divert/).
+Divert allows you to create Development Environments that include only the services you are actively working on while leveraging a shared environment for all other microservices. This approach significantly reduces infrastructure costs and complexity, especially in large environments. [You can learn more about divert in our documentation](https://www.okteto.com/docs/reference/okteto-manifest/#divert).
 
 This repository contains examples of the different patterns that you can leverage when using Divert. Our goal is to use this examples to showcase the different architectural patterns that you can implement with Okteto Divert.
 
