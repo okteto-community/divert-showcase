@@ -4,12 +4,12 @@ dev:
   servicea:
     command: bash
     sync:
-      - serviceA:/usr/src/app
+    - serviceA:/usr/src/app
   serviceb:
     command: bash
     sync:
-      - serviceB:/usr/src/app
+    - serviceB:/usr/src/app
   servicec:
     command: bash
     sync:
-      - serviceC:/usr/src/app
+    - serviceC:/usr/src/app

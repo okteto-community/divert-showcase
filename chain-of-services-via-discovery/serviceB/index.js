@@ -13,8 +13,17 @@ function getDivertKey(headers) {
   return undefined;
 }
 
+function buildTargetServiceUrl(headers) {
+  const divertKey = getDivertKey(headers);
+  if (divertKey) {
+    // when diverted, route the request to the service on the diverted namespace.
+    return `http://servicec.${divertKey}:8080/chain`;
+  }
+
+  return `http://servicec:8080/chain`;
+}
+
 function buildHeaders(headers) {
-  // propagate the baggage headers to allow the receiving service to make runtime decisions
   var options = { headers: {} };
   const divertKey = getDivertKey(headers);
   if (divertKey) {
@@ -26,32 +35,28 @@ function buildHeaders(headers) {
 }
 
 async function callDownstreamService(headers) {
-  const url = `https://${headers.host}/servicec/chain`;
+  // propagate the baggage headers to allow the receiving service to make runtime decisions
   const options = buildHeaders(headers);
-  console.log(`calling service ${url}`);
-  return await got(url, options).text();
+  const serviceUrl = buildTargetServiceUrl();
+  console.log(`calling ${serviceUrl}`);
+  return await got(serviceUrl, options).text();
 }
 
-app.get("/serviceb", function (req, res) {
+app.get("/", function (req, res) {
   res.send("Service B says hello!");
 });
 
-app.get("/serviceb/chain", async function (req, res) {
+app.get("/chain", async function (req, res) {
   console.log("/chain request");
 
   try {
-    const data = await callDownstreamService(req.headers);
+    const data = await callDownstreamService();
     const message = `Service B says hello from ${process.env.OKTETO_NAMESPACE}! <br />`;
     res.send(message + data);
   } catch (err) {
     console.log(err);
     res.status(500).send(err.message);
   }
-});
-
-app.use(function (req, res, next) {
-  res.status(404).send("404: Sorry! Page not found.");
-  console.log("404 error occurred:", req.url);
 });
 
 app.listen(PORT, function () {

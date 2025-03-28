@@ -1,16 +1,29 @@
-services: 
+services:
   servicea:
     build:
       context: servicea
     ports:
-    - 8080:8080
+      - 8080
   serviceb:
     build:
       context: serviceb
     ports:
-    - 8080:8080
+      - 8080
   servicec:
     build:
       context: servicec
     ports:
-    - 8080:8080
+      - 8080
+endpoints:
+  labels:
+    dev.okteto.com/endpoints: https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/servicea/chain,https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/serviceb/chain
+  rules:
+    - path: /servicea
+      service: servicea
+      port: 8080
+    - path: /serviceb
+      service: serviceb
+      port: 8080
+    - path: /servicec
+      service: servicec
+      port: 8080

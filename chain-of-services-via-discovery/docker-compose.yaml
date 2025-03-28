@@ -1,0 +1,16 @@
+services:
+  servicea:
+    build:
+      context: servicea
+    ports:
+      - 8080:8080
+  serviceb:
+    build:
+      context: serviceb
+    ports:
+      - 8080:8080
+  servicec:
+    build:
+      context: servicec
+    ports:
+      - 8080:8080
