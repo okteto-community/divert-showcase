@@ -13,33 +13,33 @@ function getDivertKey(headers) {
   return undefined;
 }
 
-function buildTargetServiceHost(headers) {
-  var targetServiceHost = "servicec";
+function buildTargetServiceUrl(headers) {
   const divertKey = getDivertKey(headers);
   if (divertKey) {
     // when diverted, route the request to the service on the diverted namespace.
-    targetServiceHost = `${targetServiceHost}.${divertKey}`;
+    return `http://servicec.${divertKey}:8080/chain`;
   }
 
-  return targetServiceHost;
+  return `http://servicec:8080/chain`;
 }
 
 function buildHeaders(headers) {
-  // since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
-  // This allows the receiving service to make runtime decisions
   var options = { headers: {} };
   const divertKey = getDivertKey(headers);
   if (divertKey) {
     options.headers["baggage.okteto-divert"] = divertKey;
+    //add other headers that you might need to propagate
   }
 
   return options;
 }
 
 async function callDownstreamService(headers) {
+  // Propagate the baggage headers to allow the receiving service to make runtime decisions
   const options = buildHeaders(headers);
-  var url = `http://${buildTargetServiceHost()}:8080/chain`;
-  return await got(url, undefined, options).text();
+  const serviceUrl = buildTargetServiceUrl();
+  console.log(`calling ${serviceUrl}`);
+  return await got(serviceUrl, options).text();
 }
 
 app.get("/", function (req, res) {

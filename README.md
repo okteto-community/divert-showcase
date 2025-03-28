@@ -8,8 +8,8 @@ These samples require Okteto Platform 1.30.1 or newer.
 
 ## Scenarios
 
-1. [Chain of Services via Ingress](chain-of-services-via-ingress): This demo shows you how to use divert when your services have a single ingress
-1. [Chain of Services via Service Discovery](chain-of-services-via-discovery): This demo shows you how to use divert with Kubernetes service discovery mechanisms.
+1. [Chain of Services via Ingress](chain-of-services-via-ingress): This demo shows you how to use divert when you call your services via a single ingress for all.
+1. [Chain of Services via Service Discovery](chain-of-services-via-discovery): This demo shows you how to use divert when you call your services using the Kubernetes service discovery mechanisms.
 1. [Producer-Consumer](producer-consumer): This demo shows you how to use divert with Kafka.
 1. [Movies App](https://github.com/okteto/movies-catalog): This demo shows you how to use divert when your frontend calls multiple services
 
@@ -19,4 +19,4 @@ These samples require Okteto Platform 1.30.1 or newer.
 2. On the `staging` namespace, deploy the full application: `okteto deploy -n=staging`
 3. Verify that the application works by accessing their endpoints
 4. On your personal namespace, only deploy the services that you want to develop on (e.g `okteto deploy -f okteto.serviceb.yaml`)
-5. From your personal namespace, access the endpoints. Notice how the responses change between shared and `diverted` services. 
+5. From your personal namespace, access the endpoints. Notice how the responses change between shared and `diverted` services.

@@ -4,10 +4,33 @@ import express from "express";
 const app = express();
 const PORT = 8080;
 
+function getDivertKey(headers) {
+  if (headers && headers[oktetoDivertHeader]) {
+    return headers[oktetoDivertHeader];
+  }
+
+  return undefined;
+}
+
+function buildHeaders(headers) {
+  // since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
+  // This allows the receiving service to make runtime decisions
+  var options = { headers: {} };
+  const divertKey = getDivertKey(headers);
+  if (divertKey) {
+    options.headers["baggage.okteto-divert"] = divertKey;
+    //add other headers that you might need to propagate
+  }
+
+  return options;
+}
+
 async function callDownstreamService(req) {
   const url = `https://${req.headers.host}/serviceb/chain`;
-  console.log(`calling service ${url}`);
-  return await got(url).text();
+  const options = buildHeaders(req.headers);
+  console.log(`calling service ${url} with headers ${options.headers}`);
+
+  return await got(url, options).text();
 }
 
 app.get("/servicea", function (req, res) {

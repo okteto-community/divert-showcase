@@ -13,6 +13,17 @@ function getDivertKey(headers) {
   return undefined;
 }
 
+function buildHeaders(headers) {
+  var options = { headers: {} };
+  const divertKey = getDivertKey(headers);
+  if (divertKey) {
+    options.headers["baggage.okteto-divert"] = divertKey;
+    //add other headers that you might need to propagate
+  }
+
+  return options;
+}
+
 function buildTargetServiceUrl(headers) {
   const divertKey = getDivertKey(headers);
   if (divertKey) {
@@ -24,7 +35,12 @@ function buildTargetServiceUrl(headers) {
 }
 
 async function callDownstreamService(headers) {
-  return await got(buildTargetServiceUrl()).text();
+  // Since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
+  // This allows the receiving service to make runtime decisions
+  const options = buildHeaders(headers);
+  const serviceUrl = buildTargetServiceUrl();
+  console.log(`calling ${serviceUrl}`);
+  return await got(serviceUrl, options).text();
 }
 
 app.get("/", function (req, res) {
