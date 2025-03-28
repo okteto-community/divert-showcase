@@ -35,7 +35,7 @@ function buildHeaders(headers) {
 }
 
 async function callDownstreamService(headers) {
-  // Propagate the baggage headers to allow the receiving service to make runtime decisions
+  // propagate the baggage headers to allow the receiving service to make runtime decisions
   const options = buildHeaders(headers);
   const serviceUrl = buildTargetServiceUrl();
   console.log(`calling ${serviceUrl}`);

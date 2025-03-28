@@ -35,8 +35,7 @@ function buildTargetServiceUrl(headers) {
 }
 
 async function callDownstreamService(headers) {
-  // Since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
-  // This allows the receiving service to make runtime decisions
+  // propagate the baggage headers to allow the receiving service to make runtime decisions
   const options = buildHeaders(headers);
   const serviceUrl = buildTargetServiceUrl();
   console.log(`calling ${serviceUrl}`);

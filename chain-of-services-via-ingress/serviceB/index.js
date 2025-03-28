@@ -13,8 +13,7 @@ function getDivertKey(headers) {
 }
 
 function buildHeaders(headers) {
-  // since we are going directly to the service instead of through the ingress, we ned to propagate the baggage headers.
-  // This allows the receiving service to make runtime decisions
+  // propagate the baggage headers to allow the receiving service to make runtime decisions
   var options = { headers: {} };
   const divertKey = getDivertKey(headers);
   if (divertKey) {
