@@ -2,6 +2,7 @@ import got from "got";
 import express from "express";
 
 const app = express();
+const oktetoDivertHeader = "baggage.okteto-divert";
 const PORT = 8080;
 
 function getDivertKey(headers) {
