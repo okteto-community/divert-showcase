@@ -22,7 +22,11 @@ deploy:
           echo "SQS_QUEUE_URL=$queueUrl"
           echo "SQS_QUEUE_NAME=$queueName"
         } >> "$OKTETO_ENV"
-  compose: docker-compose.yaml
+        
+    - name: Deploy docker-compose
+      command: |
+        okteto deploy -f docker-compose.yaml
+
 destroy:
   image: hashicorp/terraform:1.4
   commands:
@@ -37,7 +41,7 @@ destroy:
 
         # run terraform
         terraform init -input=false
-        terraform destroy -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve --destroy
+        terraform apply -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve --destroy
 dev:
   producer:
     command: bash
