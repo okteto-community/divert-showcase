@@ -12,7 +12,7 @@ This repository contains examples of the different patterns that you can leverag
 1. [Chain of Services via Ingress](chain-of-services-via-ingress): Demonstrates how to use divert when you call all your services via a single shared ingress.
 1. [Chain of Services via Service Discovery](chain-of-services-via-discovery): Shows how to use Divert when services talk to each other using Kubernetes’ internal DNS (`service-name.namespace.svc.cluster.local`).
 1. [Producer-Consumer Wit Kafka](producer-consumer-kafka): Demonstrates Divert in an event-driven architecture using Kafka to pass messages between services.
-1. [Producer-Consumer Wit Kafka](producer-consumer-kafka): Demonstrates Divert in an event-driven architecture using SQS to pass messages between services.
+1. [Producer-Consumer Wit SQS](producer-consumer-sqs): Demonstrates Divert in an event-driven architecture using SQS to pass messages between services.
 1. [Movies App](https://github.com/okteto/movies-catalog): A real-world example where a frontend app interacts with multiple backend services. This shows how Divert enables developing just the frontend (or one backend) while reusing the rest.
 
 ## Getting Started with Divert
