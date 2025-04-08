@@ -1,0 +1,53 @@
+deploy:
+  image: hashicorp/terraform:1.4
+  commands:
+    - name: Create the AWS infrastructure
+      command: |
+        set -e
+        # set the env vars needed by terraform
+        queueName="${OKTETO_NAMESPACE}-divert-showcase-sqs"
+        region=$AWS_REGION
+        export KUBE_CONFIG_PATH="$KUBECONFIG"
+        export KUBE_NAMESPACE=$OKTETO_NAMESPACE
+
+        # run terraform
+        terraform init -input=false
+        terraform apply -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve
+
+        # get the values from terraform and add them to the Okteto Environment
+        queueUrl=$(terraform output -raw queue_url)
+        queueDashboard="https://${region}.console.aws.amazon.com/sqs/v2/home?region=${region}#/queues"
+        {
+          echo "OKTETO_EXTERNAL_SQS_ENDPOINTS_QUEUE_URL=$queueDashboard"
+          echo "SQS_QUEUE_URL=$queueUrl"
+          echo "SQS_QUEUE_NAME=$queueName"
+        } >> "$OKTETO_ENV"
+  compose: docker-compose.yaml
+destroy:
+  image: hashicorp/terraform:1.4
+  commands:
+    - name: Destroy the AWS infrastructure
+      command: |
+        set -e
+        # set the env vars needed by terraform
+        queueName="${OKTETO_NAMESPACE}-divert-showcase-sqs"
+        region=$AWS_REGION
+        export KUBE_CONFIG_PATH="$KUBECONFIG"
+        export KUBE_NAMESPACE=$OKTETO_NAMESPACE
+
+        # run terraform
+        terraform init -input=false
+        terraform destroy -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve --destroy
+dev:
+  producer:
+    command: bash
+    sync:
+      - producer:/usr/src/app
+  consumer:
+    command: bash
+    sync:
+      - consumer:/usr/src/app
+external:
+  sqs:
+    endpoints:
+      - name: queue
