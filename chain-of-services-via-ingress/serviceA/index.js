@@ -28,7 +28,9 @@ function buildHeaders(headers) {
 async function callDownstreamService(req) {
   const url = `https://${req.headers.host}/serviceb/chain`;
   const options = buildHeaders(req.headers);
-  console.log(`calling service ${url} with headers ${options.headers}`);
+  console.log(
+    `calling service ${url} with headers ${JSON.stringify(options.headers)}`,
+  );
 
   return await got(url, options).text();
 }

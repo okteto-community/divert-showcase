@@ -25,10 +25,12 @@ function buildHeaders(headers) {
   return options;
 }
 
-async function callDownstreamService(headers) {
-  const url = `https://${headers.host}/servicec/chain`;
-  const options = buildHeaders(headers);
-  console.log(`calling service ${url}`);
+async function callDownstreamService(req) {
+  const url = `https://${req.headers.host}/servicec/chain`;
+  const options = buildHeaders(req.headers);
+  console.log(
+    `calling service ${url} with headers ${JSON.stringify(options.headers)}`,
+  );
   return await got(url, options).text();
 }
 
@@ -40,7 +42,7 @@ app.get("/serviceb/chain", async function (req, res) {
   console.log("/chain request");
 
   try {
-    const data = await callDownstreamService(req.headers);
+    const data = await callDownstreamService(req);
     const message = `Service B says hello from ${process.env.OKTETO_NAMESPACE}! <br />`;
     res.send(message + data);
   } catch (err) {
