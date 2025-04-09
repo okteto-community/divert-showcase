@@ -18,14 +18,13 @@ deploy:
         queueUrl=$(terraform output -raw queue_url)
         queueDashboard="https://${region}.console.aws.amazon.com/sqs/v2/home?region=${region}#/queues"
         {
-          echo "OKTETO_EXTERNAL_SQS_ENDPOINTS_QUEUE_URL=$queueDashboard"
+          echo "OKTETO_EXTERNAL_SQS_ENDPOINTS_QUEUE_URL=$queueUrl"
+          echo "OKTETO_EXTERNAL_SQS_ENDPOINTS_WEB_URL=$queueDashboard"
           echo "SQS_QUEUE_URL=$queueUrl"
           echo "SQS_QUEUE_NAME=$queueName"
         } >> "$OKTETO_ENV"
-        
-    - name: Deploy docker-compose
-      command: |
-        okteto deploy -f docker-compose.yaml
+
+  compose: docker-compose.yaml
 
 destroy:
   image: hashicorp/terraform:1.4
@@ -41,7 +40,7 @@ destroy:
 
         # run terraform
         terraform init -input=false
-        terraform apply -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve --destroy
+        terraform apply -input=false -var "queue_name=$queueName" -var "region=$region" -auto-approve --destroy -lock=false
 dev:
   producer:
     command: bash
@@ -55,3 +54,4 @@ external:
   sqs:
     endpoints:
       - name: queue
+      - name: web

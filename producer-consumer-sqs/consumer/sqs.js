@@ -3,10 +3,19 @@ import {
   ReceiveMessageCommand,
   DeleteMessageCommand,
 } from "@aws-sdk/client-sqs";
+
 const oktetoDivertHeader = "baggage.okteto-divert";
 const client = new SQSClient({ region: process.env.AWS_REGION || "us-west-2" });
-const queueUrl = process.env.SQS_QUEUE_URL;
 const divertKey = getDivertKey();
+
+function getQueueUrl() {
+  var namespace = process.env.OKTETO_NAMESPACE;
+  if (process.env.SHARED_NAMESPACE) {
+    namespace = process.env.SHARED_NAMESPACE;
+  }
+
+  return `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_ACCOUNT_NUMBER}/${namespace}-divert-showcase-sqs`;
+}
 
 function getDivertKey() {
   return process.env.OKTETO_NAMESPACE;
@@ -34,16 +43,18 @@ function shouldConsumeMessage(messageAttributes) {
     return true;
   }
 
-  console.log(`Skipping message since it has divertKey ${divertAttribute}`);
+  console.log(
+    `Skipping message since it has divertKey ${divertAttribute.StringValue}`,
+  );
 
   return false;
 }
 
 export async function startConsumer(messageCallback) {
-  console.log("🟢 Starting consumer");
+  console.log(`🟢 Starting consumer on queue ${getQueueUrl()}`);
 
   const params = {
-    QueueUrl: queueUrl,
+    QueueUrl: getQueueUrl(),
     MessageAttributeNames: ["All"],
     MaxNumberOfMessages: 10,
     VisibilityTimeout: 20,
@@ -59,7 +70,7 @@ export async function startConsumer(messageCallback) {
         if (shouldConsumeMessage(message.MessageAttributes)) {
           messageCallback(message.Body);
           const deleteParams = {
-            QueueUrl: queueUrl,
+            QueueUrl: getQueueUrl(),
             ReceiptHandle: message.ReceiptHandle,
           };
 

@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 ADD package.json .
 RUN npm install
 
-COPY index.js .
+COPY index.js sqs.js /usr/src/app/
 
 EXPOSE 8080
 

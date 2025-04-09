@@ -1,7 +1,15 @@
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 const oktetoDivertHeader = "baggage.okteto-divert";
 const client = new SQSClient({ region: process.env.AWS_REGION || "us-west-2" });
-const queueUrl = process.env.SQS_QUEUE_URL;
+
+function getQueueUrl() {
+  var namespace = process.env.OKTETO_NAMESPACE;
+  if (process.env.SHARED_NAMESPACE) {
+    namespace = process.env.SHARED_NAMESPACE;
+  }
+
+  return `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_ACCOUNT_NUMBER}/${namespace}-divert-showcase-sqs`;
+}
 
 function buildDivertKey(headers) {
   var tk = process.env.OKTETO_NAMESPACE;
@@ -19,7 +27,7 @@ export async function sendMesage(message, headers) {
 
   try {
     const sqsMessage = {
-      QueueUrl: queueUrl,
+      QueueUrl: getQueueUrl(),
       MessageBody: message,
       MessageAttributes: {
         "baggage.okteto-divert": {
@@ -34,6 +42,6 @@ export async function sendMesage(message, headers) {
 
     console.log(`sent message id: ${response.MessageId}`);
   } catch (error) {
-    throw `failed to send message to ${queueUrl}: ${error}`;
+    throw `failed to send message to ${getQueueUrl()}: ${error}`;
   }
 }
