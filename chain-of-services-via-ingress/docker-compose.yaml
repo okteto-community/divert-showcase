@@ -17,6 +17,9 @@ services:
 endpoints:
   labels:
     dev.okteto.com/endpoints: https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/servicea/chain,https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/serviceb/chain
+  annotations:
+    # this is only needed when defining `endpoints`
+    divert.okteto.com/header: ${SHARED_NAMESPACE}
   rules:
     - path: /servicea
       service: servicea

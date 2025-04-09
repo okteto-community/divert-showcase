@@ -36,6 +36,12 @@ function buildHeaders(headers) {
 
 async function callDownstreamService(headers) {
   // propagate the baggage headers to allow the receiving service to make runtime decisions
+  console.log(`calling downstream service with headers:`);
+
+  Object.keys(headers).forEach((key) => {
+    console.log(`${key}: ${headers[key]}`);
+  });
+
   const options = buildHeaders(headers);
   const serviceUrl = buildTargetServiceUrl();
   console.log(`calling ${serviceUrl}`);
