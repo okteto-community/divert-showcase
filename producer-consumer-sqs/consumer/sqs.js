@@ -1,7 +1,8 @@
 import {
   SQSClient,
-  ReceiveMessageCommand,
+  ChangeMessageVisibilityCommand,
   DeleteMessageCommand,
+  ReceiveMessageCommand,
 } from "@aws-sdk/client-sqs";
 
 const oktetoDivertHeader = "baggage.okteto-divert";
@@ -75,6 +76,16 @@ export async function startConsumer(messageCallback) {
           };
 
           await client.send(new DeleteMessageCommand(deleteParams));
+        } else {
+          const changeVisibilityParams = {
+            QueueUrl: queueUrl,
+            ReceiptHandle: message.ReceiptHandle,
+            VisibilityTimeout: 0, // Setting to 0 makes it immediately visible to other workers
+          };
+
+          await client.send(
+            new ChangeMessageVisibilityCommand(changeVisibilityParams),
+          );
         }
       });
     }
