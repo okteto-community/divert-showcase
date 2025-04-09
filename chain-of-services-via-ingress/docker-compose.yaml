@@ -1,4 +1,9 @@
 services:
+  chain:
+    build:
+      context: proxy
+    ports:
+      - 8080:80
   servicea:
     build:
       context: servicea
@@ -14,16 +19,3 @@ services:
       context: servicec
     ports:
       - 8080
-endpoints:
-  labels:
-    dev.okteto.com/endpoints: https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/servicea/chain,https://divert-showcase-${OKTETO_NAMESPACE}.${OKTETO_DOMAIN}/serviceb/chain
-  rules:
-    - path: /servicea
-      service: servicea
-      port: 8080
-    - path: /serviceb
-      service: serviceb
-      port: 8080
-    - path: /servicec
-      service: servicec
-      port: 8080

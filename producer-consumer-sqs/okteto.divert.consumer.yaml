@@ -1,0 +1,12 @@
+deploy:
+  compose:
+    file: docker-compose.yaml
+    services:
+      - consumer
+  divert:
+    namespace: $SHARED_NAMESPACE
+dev:
+  consumer:
+    command: bash
+    sync:
+      - consumer:/usr/src/app

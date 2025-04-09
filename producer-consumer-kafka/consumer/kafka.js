@@ -59,11 +59,10 @@ export async function startConsumer(messageCallback) {
       const { headers, text } = messageJson;
       if (shouldConsumeMessage(headers)) {
         messageCallback(text);
+        await consumer.commitOffsets([
+          { topic, partition, offset: message.offset },
+        ]);
       }
-
-      await consumer.commitOffsets([
-        { topic, partition, offset: message.offset },
-      ]);
     },
   });
 }
