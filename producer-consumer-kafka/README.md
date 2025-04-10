@@ -30,10 +30,10 @@ This sample shows how to you can use Okteto Divert with services that interact v
 
 4. Deploy a diverted environment in your personal namespace.
    ```bash
-   okteto deploy -n cindy okteto.producer.yaml
+   okteto deploy -n cindy okteto.divert.consumer.yaml
    ```
 
-5. Call the producer using the endpoint in your personal namespace. 
+5. Call the producer using the endpoint in your personal namespace.
 
     ```bash
     curl https://producer-cindy.okteto.example.com/send
@@ -44,7 +44,7 @@ This sample shows how to you can use Okteto Divert with services that interact v
     Message sent successfully: Hello world at Thu Apr 10 2025 05:31:12 GMT+0000 (Coordinated Universal Time)
     ```
 
-6. Notice how the consumer on staging is not consuming the message, since it's directed to the diverted consumer.
+6. Notice how the consumer on staging is not consuming the message, while the consumer on your personal namespace is consuming it.
 
 # How does it work?
 ![Producer - Consumer with Kafka](divert-producer-consumer.png)
