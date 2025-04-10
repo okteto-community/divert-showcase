@@ -5,7 +5,7 @@ const app = express();
 const oktetoDivertHeader = "baggage.okteto-divert";
 const PORT = 8080;
 
-function getDivertKey(headers) {
+function getDivertKeyFromHeaders(headers) {
   if (headers && headers[oktetoDivertHeader]) {
     return headers[oktetoDivertHeader];
   }
@@ -14,18 +14,19 @@ function getDivertKey(headers) {
 }
 
 function buildTargetServiceUrl(headers) {
-  const divertKey = getDivertKey(headers);
+  const divertKey = getDivertKeyFromHeaders(headers);
   if (divertKey) {
     // when diverted, route the request to the service on the diverted namespace.
     return `http://servicec.${divertKey}:8080/chain`;
   }
 
+  // when not diverted, route the request to the service on the same namespace.
   return `http://servicec:8080/chain`;
 }
 
 function buildHeaders(headers) {
   var options = { headers: {} };
-  const divertKey = getDivertKey(headers);
+  const divertKey = getDivertKeyFromHeaders(headers);
   if (divertKey) {
     options.headers["baggage.okteto-divert"] = divertKey;
     //add other headers that you might need to propagate
