@@ -10,7 +10,7 @@ This sample shows how to you can use Divert header propagation features to route
 1. Clone the repository:
    ```bash
    git clone https://github.com/okteto/divert-showcase.git
-   cd divert-showcase/chain-of-services-via-discovery
+   cd divert-showcase/chain-of-services-via-ingress
    ```
 2. Deploy the full environment in the shared namespace:
    ```bash
