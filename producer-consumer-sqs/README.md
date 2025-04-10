@@ -1,9 +1,9 @@
-# Okteto Divert Showcase - Producer-Consumer Kafka
+# Okteto Divert Showcase - Producer-Consumer SQS
 
 Okteto Divert allows you to spin up Development Environments that include **only the services you're actively working on**, while routing all other service traffic to a **shared environment**. This dramatically reduces infrastructure cost and speeds up environment startup—especially for large microservice applications.
 👉 [Learn more about Divert in our docs](https://www.okteto.com/docs/reference/okteto-manifest/#divert)
 
-This sample shows how to you can use Okteto Divert with services that interact via Kafka topics.
+This sample shows how to you can use Okteto Divert with services that interact via SQS topics.
 
 
 # Try the sample
