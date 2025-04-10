@@ -3,7 +3,7 @@
 Okteto Divert allows you to spin up Development Environments that include **only the services you're actively working on**, while routing all other service traffic to a **shared environment**. This dramatically reduces infrastructure cost and speeds up environment startup—especially for large microservice applications.
 👉 [Learn more about Divert in our docs](https://www.okteto.com/docs/reference/okteto-manifest/#divert)
 
-This sample shows how to you can use Divert header propagation features to route requests between services that talk to each other via a shared ingress (e.g `https://chain-staging.okteto.example.com`).
+This sample shows how to you can use Divert header propagation features to route requests between services that talk to each other via a shared ingress (e.g `https://chain-staging.okteto.example.com`). All services are proxied via the shared ingress.
 
 # Try the sample
 
