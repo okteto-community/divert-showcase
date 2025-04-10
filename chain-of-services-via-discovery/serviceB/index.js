@@ -13,17 +13,6 @@ function getDivertKeyFromHeaders(headers) {
   return undefined;
 }
 
-function buildTargetServiceUrl(headers) {
-  const divertKey = getDivertKeyFromHeaders(headers);
-  if (divertKey) {
-    // when diverted, route the request to the service on the diverted namespace.
-    return `http://servicec.${divertKey}:8080/chain`;
-  }
-
-  // when not diverted, route the request to the service on the same namespace.
-  return `http://servicec:8080/chain`;
-}
-
 function buildHeaders(headers) {
   var options = { headers: {} };
   const divertKey = getDivertKeyFromHeaders(headers);
@@ -44,7 +33,7 @@ async function callDownstreamService(headers) {
   });
 
   const options = buildHeaders(headers);
-  const serviceUrl = buildTargetServiceUrl();
+  const serviceUrl = `http://servicec:8080/chain`;
   console.log(`calling ${serviceUrl}`);
   return await got(serviceUrl, options).text();
 }
@@ -57,7 +46,7 @@ app.get("/chain", async function (req, res) {
   console.log("/chain request");
 
   try {
-    const data = await callDownstreamService();
+    const data = await callDownstreamService(req.headers);
     const message = `Service B says hello from ${process.env.OKTETO_NAMESPACE}! <br />`;
     res.send(message + data);
   } catch (err) {
